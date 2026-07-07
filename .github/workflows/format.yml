@@ -1,0 +1,27 @@
+name: Format
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run autofmt
+        uses: ./
+        with:
+          rules: |
+            {
+              "printWidth": 100,
+              "semi": true,
+              "singleQuote": true
+            }
