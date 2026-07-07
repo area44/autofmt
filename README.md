@@ -29,21 +29,20 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
 
       - name: Run autofmt
         uses: area44/autofmt@v1
         with:
-          # (Optional) Provide formatting rules as a JSON string
           rules: |
             {
               "printWidth": 100,
               "semi": true,
               "singleQuote": true
             }
-          # (Optional) Provide ignore patterns as a multiline string
           ignore: |
             dist/**
             build/**

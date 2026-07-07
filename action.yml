@@ -1,15 +1,15 @@
-name: "autofmt"
-description: "Fast JavaScript/TypeScript formatting using the Oxc formatter"
-author: "AREA44"
+name: 'autofmt'
+description: 'Fast JavaScript/TypeScript formatting using the Oxc formatter'
+author: 'AREA44'
 inputs:
   rules:
-    description: "JSON string of formatting rules (no need for a config file in your repo)"
+    description: 'JSON string of formatting rules (no need for a config file in your repo)'
     required: false
   ignore:
-    description: "Multiline string of patterns to ignore (no need for an ignore file in your repo)"
+    description: 'Multiline string of patterns to ignore (no need for an ignore file in your repo)'
     required: false
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Install oxfmt
       run: npm install -g oxfmt
@@ -38,22 +38,28 @@ runs:
 
     - name: Run oxfmt
       run: |
-        # oxfmt automatically searches for .oxfmtrc.json in the current directory
         oxfmt --write .
       shell: bash
 
     - name: Check for changes and push
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       run: |
-        # Clean up temporary files before checking for changes
         rm -f .oxfmtrc.json
 
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+        PUSH_REF="HEAD"
+        if [ -n "$GITHUB_HEAD_REF" ]; then
+          PUSH_REF="HEAD:$GITHUB_HEAD_REF"
+        fi
+
         git add .
         if ! git diff --cached --quiet; then
-          echo "Changes detected, committing and pushing..."
+          echo "Changes detected, committing and pushing to $PUSH_REF..."
           git commit -m "style: format code with oxfmt [skip ci]"
-          git push origin HEAD
+          git push origin $PUSH_REF
         else
           echo "No changes detected."
         fi
