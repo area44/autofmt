@@ -52,9 +52,9 @@ jobs:
 
 ## Configuration
 
-| Input | Description | Default |
-|-------|-------------|---------|
-| `rules` | JSON string of formatting rules | (optional) |
+| Input    | Description                            | Default    |
+| -------- | -------------------------------------- | ---------- |
+| `rules`  | JSON string of formatting rules        | (optional) |
 | `ignore` | Multiline string of patterns to ignore | (optional) |
 
 ## License
