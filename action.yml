@@ -1,0 +1,58 @@
+name: 'autofmt'
+description: 'Fast JavaScript/TypeScript formatting using the Oxc formatter'
+author: 'AREA44'
+inputs:
+  rules:
+    description: 'JSON string of formatting rules (no need for a config file in your repo)'
+    required: false
+  ignore:
+    description: 'Multiline string of patterns to ignore (no need for an ignore file in your repo)'
+    required: false
+runs:
+  using: 'composite'
+  steps:
+    - name: Install oxfmt
+      run: npm install -g oxfmt
+      shell: bash
+
+    - name: Prepare configuration
+      env:
+        RULES: ${{ inputs.rules }}
+        IGNORE: ${{ inputs.ignore }}
+      run: |
+        if [ -n "$RULES" ]; then
+          printf "%s\n" "$RULES" > .oxfmtrc.json
+          echo "Created temporary .oxfmtrc.json"
+        fi
+        if [ -n "$IGNORE" ]; then
+          printf "%s\n" "$IGNORE" > .oxfmtignore
+          echo "Created temporary .oxfmtignore"
+        fi
+      shell: bash
+
+    - name: Run oxfmt
+      run: |
+        ARGS=("--write")
+        if [ -f .oxfmtignore ]; then
+          ARGS+=("--ignore-path" ".oxfmtignore")
+        fi
+        # oxfmt automatically searches for .oxfmtrc.json in the current directory
+        oxfmt "${ARGS[@]}" .
+      shell: bash
+
+    - name: Check for changes and push
+      run: |
+        # Clean up temporary files before checking for changes
+        rm -f .oxfmtrc.json .oxfmtignore
+
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        if ! git diff --cached --quiet; then
+          echo "Changes detected, committing and pushing..."
+          git commit -m "style: format code with oxfmt [skip ci]"
+          git push origin HEAD
+        else
+          echo "No changes detected."
+        fi
+      shell: bash
