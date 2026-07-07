@@ -2,11 +2,11 @@ name: 'autofmt'
 description: 'Fast JavaScript/TypeScript formatting using the Oxc formatter'
 author: 'AREA44'
 inputs:
-  config:
-    description: 'Path to the configuration file'
+  rules:
+    description: 'JSON string of formatting rules (no need for a config file in your repo)'
     required: false
   ignore:
-    description: 'Path to ignore file(s)'
+    description: 'Multiline string of patterns to ignore (no need for an ignore file in your repo)'
     required: false
 runs:
   using: 'composite'
@@ -15,32 +15,43 @@ runs:
       run: npm install -g oxfmt
       shell: bash
 
-    - name: Run oxfmt
+    - name: Prepare configuration
       env:
-        CONFIG_PATH: ${{ inputs.config }}
-        IGNORE_PATH: ${{ inputs.ignore }}
+        RULES: ${{ inputs.rules }}
+        IGNORE: ${{ inputs.ignore }}
       run: |
-        declare -a ARGS=("--write")
-        if [ -n "$CONFIG_PATH" ]; then
-          ARGS+=("--config" "$CONFIG_PATH")
+        if [ -n "$RULES" ]; then
+          printf "%s\n" "$RULES" > .oxfmtrc.json
+          echo "Created temporary .oxfmtrc.json"
         fi
-        if [ -n "$IGNORE_PATH" ]; then
-          for path in $IGNORE_PATH; do
-            ARGS+=("--ignore-path" "$path")
-          done
+        if [ -n "$IGNORE" ]; then
+          printf "%s\n" "$IGNORE" > .oxfmtignore
+          echo "Created temporary .oxfmtignore"
         fi
+      shell: bash
+
+    - name: Run oxfmt
+      run: |
+        ARGS=("--write")
+        if [ -f .oxfmtignore ]; then
+          ARGS+=("--ignore-path" ".oxfmtignore")
+        fi
+        # oxfmt automatically searches for .oxfmtrc.json in the current directory
         oxfmt "${ARGS[@]}" .
       shell: bash
 
     - name: Check for changes and push
       run: |
+        # Clean up temporary files before checking for changes
+        rm -f .oxfmtrc.json .oxfmtignore
+
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add .
         if ! git diff --cached --quiet; then
           echo "Changes detected, committing and pushing..."
-          git commit -m "style: format code with oxfmt"
-          git push
+          git commit -m "style: format code with oxfmt [skip ci]"
+          git push origin HEAD
         else
           echo "No changes detected."
         fi

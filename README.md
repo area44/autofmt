@@ -6,7 +6,8 @@ This GitHub Action provides a reusable Composite Action for fast JavaScript and 
 
 - **Blazing Fast**: Powered by Oxc, the fastest JavaScript toolchain.
 - **Auto-commit**: Automatically detects changes and pushes formatted code back to your branch.
-- **Zero Config**: Works out of the box with sensible defaults.
+- **Zero Repo Noise**: Provide rules and ignore patterns directly in your workflow file—no need for extra `.oxfmtrc.json` or `.prettierignore` files in your repository.
+- **CI Friendly**: Automatically adds `[skip ci]` to prevent recursive workflow runs.
 
 ## Usage
 
@@ -37,16 +38,26 @@ jobs:
       - name: Run autofmt
         uses: area44/autofmt@v1
         with:
-          config: '.oxfmtrc.json'
-          ignore: '.prettierignore'
+          # (Optional) Provide formatting rules as a JSON string
+          rules: |
+            {
+              "printWidth": 100,
+              "semi": true,
+              "singleQuote": true
+            }
+          # (Optional) Provide ignore patterns as a multiline string
+          ignore: |
+            dist/**
+            build/**
+            vendor/*.js
 ```
 
 ## Configuration
 
 | Input | Description | Default |
 |-------|-------------|---------|
-| `config` | Path to the configuration file (.json, .jsonc, .ts, etc.) | (optional) |
-| `ignore` | Path to ignore file(s) | (optional) |
+| `rules` | JSON string of formatting rules | (optional) |
+| `ignore` | Multiline string of patterns to ignore | (optional) |
 
 ## Permissions
 
