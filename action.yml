@@ -1,0 +1,36 @@
+name: 'oxfmt GitHub Action'
+description: 'Fast JavaScript/TypeScript formatting using the Oxc formatter'
+author: 'AREA44'
+inputs:
+  files:
+    description: 'Path or directory to format'
+    required: false
+    default: '.'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install oxfmt
+      run: npm install -g oxfmt
+      shell: bash
+
+    - name: Run oxfmt
+      env:
+        INPUT_FILES: ${{ inputs.files }}
+      run: oxfmt --write "$INPUT_FILES"
+      shell: bash
+
+    - name: Check for changes and push
+      env:
+        INPUT_FILES: ${{ inputs.files }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add "$INPUT_FILES"
+        if ! git diff --cached --quiet; then
+          echo "Changes detected, committing and pushing..."
+          git commit -m "style: format code with oxfmt"
+          git push
+        else
+          echo "No changes detected."
+        fi
+      shell: bash
