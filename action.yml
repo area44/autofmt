@@ -43,17 +43,27 @@ runs:
       shell: bash
 
     - name: Check for changes and push
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       run: |
         # Clean up temporary files before checking for changes
         rm -f .oxfmtrc.json
 
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+        # In a PR, we need to push to the head branch, not the merge ref.
+        # If GITHUB_HEAD_REF is set, we use it. Otherwise, we use the current branch.
+        PUSH_REF="HEAD"
+        if [ -n "$GITHUB_HEAD_REF" ]; then
+          PUSH_REF="HEAD:$GITHUB_HEAD_REF"
+        fi
+
         git add .
         if ! git diff --cached --quiet; then
-          echo "Changes detected, committing and pushing..."
+          echo "Changes detected, committing and pushing to $PUSH_REF..."
           git commit -m "style: format code with oxfmt [skip ci]"
-          git push origin HEAD
+          git push origin $PUSH_REF
         else
           echo "No changes detected."
         fi

@@ -29,9 +29,10 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
 
       - name: Run autofmt
         uses: area44/autofmt@v1
