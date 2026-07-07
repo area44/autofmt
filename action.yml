@@ -1,11 +1,13 @@
-name: 'oxfmt GitHub Action'
+name: 'autofmt'
 description: 'Fast JavaScript/TypeScript formatting using the Oxc formatter'
 author: 'AREA44'
 inputs:
-  files:
-    description: 'Path or directory to format'
+  config:
+    description: 'Path to the configuration file'
     required: false
-    default: '.'
+  ignore:
+    description: 'Path to ignore file(s)'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -15,17 +17,26 @@ runs:
 
     - name: Run oxfmt
       env:
-        INPUT_FILES: ${{ inputs.files }}
-      run: oxfmt --write "$INPUT_FILES"
+        CONFIG_PATH: ${{ inputs.config }}
+        IGNORE_PATH: ${{ inputs.ignore }}
+      run: |
+        declare -a ARGS=("--write")
+        if [ -n "$CONFIG_PATH" ]; then
+          ARGS+=("--config" "$CONFIG_PATH")
+        fi
+        if [ -n "$IGNORE_PATH" ]; then
+          for path in $IGNORE_PATH; do
+            ARGS+=("--ignore-path" "$path")
+          done
+        fi
+        oxfmt "${ARGS[@]}" .
       shell: bash
 
     - name: Check for changes and push
-      env:
-        INPUT_FILES: ${{ inputs.files }}
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add "$INPUT_FILES"
+        git add .
         if ! git diff --cached --quiet; then
           echo "Changes detected, committing and pushing..."
           git commit -m "style: format code with oxfmt"

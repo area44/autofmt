@@ -1,4 +1,4 @@
-# oxfmt GitHub Action
+# autofmt GitHub Action
 
 This GitHub Action provides a reusable Composite Action for fast JavaScript and TypeScript formatting using `oxfmt` (the Oxc formatter).
 
@@ -34,17 +34,19 @@ jobs:
           # Required for the git push step
           fetch-depth: 0
 
-      - name: Run oxfmt
-        uses: your-user/repo-name@v1
+      - name: Run autofmt
+        uses: area44/autofmt@v1
         with:
-          files: '.'
+          config: '.oxfmtrc.json'
+          ignore: '.prettierignore'
 ```
 
 ## Configuration
 
 | Input | Description | Default |
 |-------|-------------|---------|
-| `files` | Path or directory to format | `.` |
+| `config` | Path to the configuration file (.json, .jsonc, .ts, etc.) | (optional) |
+| `ignore` | Path to ignore file(s) | (optional) |
 
 ## Permissions
 
@@ -61,7 +63,7 @@ The action uses the built-in `GITHUB_TOKEN` provided by GitHub Actions to authen
 
 ## Tagging and Releases
 
-To allow others to use this action via `uses: your-user/repo-name@v1`, you should:
+To allow others to use this action via `uses: area44/autofmt@v1`, you should:
 
 1.  Commit and push your changes to the `main` branch.
 2.  Create a new release or tag:
