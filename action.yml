@@ -1,15 +1,15 @@
-name: 'autofmt'
-description: 'Fast JavaScript/TypeScript formatting using the Oxc formatter'
-author: 'AREA44'
+name: "autofmt"
+description: "Fast JavaScript/TypeScript formatting using the Oxc formatter"
+author: "AREA44"
 inputs:
   rules:
-    description: 'JSON string of formatting rules'
+    description: "JSON string of formatting rules"
     required: false
   ignore:
-    description: 'Multiline string of patterns to ignore'
+    description: "Multiline string of patterns to ignore"
     required: false
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Install oxfmt
       run: npm install -g oxfmt
