@@ -19,8 +19,7 @@ describe('autofmt action logic', () => {
 
   it('generates config with rules only', () => {
     const rules = JSON.stringify({ semi: true, singleQuote: true });
-    execSync(
-      `
+    execSync(`
       RULES='${rules}'
       CONFIG="{}"
       if [ -n "$RULES" ]; then
@@ -29,18 +28,15 @@ describe('autofmt action logic', () => {
       if [ "$CONFIG" != "{}" ]; then
         echo "$CONFIG" > ${CONFIG_FILE}
       fi
-    `,
-      { shell: 'bash' },
-    );
+    `, { shell: 'bash' });
 
     const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
     expect(config).toEqual({ semi: true, singleQuote: true });
   });
 
   it('generates config with ignore patterns only', () => {
-    const ignore = 'dist/**\nbuild/**';
-    execSync(
-      `
+    const ignore = "dist/**\nbuild/**";
+    execSync(`
       IGNORE='${ignore}'
       CONFIG="{}"
       if [ -n "$IGNORE" ]; then
@@ -50,9 +46,7 @@ describe('autofmt action logic', () => {
       if [ "$CONFIG" != "{}" ]; then
         echo "$CONFIG" > ${CONFIG_FILE}
       fi
-    `,
-      { shell: 'bash' },
-    );
+    `, { shell: 'bash' });
 
     const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
     expect(config.ignorePatterns).toEqual(['dist/**', 'build/**']);
@@ -60,9 +54,8 @@ describe('autofmt action logic', () => {
 
   it('generates config with both rules and ignore patterns', () => {
     const rules = JSON.stringify({ semi: true });
-    const ignore = 'dist/**';
-    execSync(
-      `
+    const ignore = "dist/**";
+    execSync(`
       RULES='${rules}'
       IGNORE='${ignore}'
       CONFIG="{}"
@@ -76,9 +69,7 @@ describe('autofmt action logic', () => {
       if [ "$CONFIG" != "{}" ]; then
         echo "$CONFIG" > ${CONFIG_FILE}
       fi
-    `,
-      { shell: 'bash' },
-    );
+    `, { shell: 'bash' });
 
     const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
     expect(config).toEqual({ semi: true, ignorePatterns: ['dist/**'] });
