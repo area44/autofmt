@@ -55,19 +55,21 @@ jobs:
 If no `rules` or `ignore` are provided, the following defaults are used:
 
 ### Default Ignore Patterns
+
 - `*.min.*`, `*.map`
 - `**/public`, `**/build`, `**/dist`, `**/out`
 - `**/.github`, `**/.next`, `**/.astro`, `**/.netlify`
 - `**/*.gen.*`
 
 ### Formatting Rules
+
 - **Import Sorting**: Groups imports by type, builtins/externals, internal, parents, and siblings.
 
 ## Configuration
 
-| Input    | Description                                                     | Default    |
-| -------- | --------------------------------------------------------------- | ---------- |
-| `rules`  | JSON string of formatting rules (merged with defaults)          | (optional) |
+| Input    | Description                                                   | Default    |
+| -------- | ------------------------------------------------------------- | ---------- |
+| `rules`  | JSON string of formatting rules (merged with defaults)        | (optional) |
 | `ignore` | Multiline string of patterns to ignore (appended to defaults) | (optional) |
 
 ## License
