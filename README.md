@@ -36,7 +36,7 @@ jobs:
           ref: ${{ github.head_ref || github.ref }}
 
       - name: Run autofmt
-        uses: area44/autofmt@v1
+        uses: area44/autofmt@v0.1.0
         with:
           # Optional: provide custom rules (merged with defaults)
           rules: |
