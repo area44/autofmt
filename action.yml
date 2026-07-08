@@ -3,10 +3,10 @@ description: 'Fast JavaScript/TypeScript formatting using the Oxc formatter'
 author: 'AREA44'
 inputs:
   rules:
-    description: 'JSON string of formatting rules (no need for a config file in your repo)'
+    description: 'JSON string of formatting rules'
     required: false
   ignore:
-    description: 'Multiline string of patterns to ignore (no need for an ignore file in your repo)'
+    description: 'Multiline string of patterns to ignore'
     required: false
 runs:
   using: 'composite'
