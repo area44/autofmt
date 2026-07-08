@@ -45,19 +45,11 @@ runs:
               ["value-parent", "value-sibling", "value-index"],
               "unknown"
             ]
-          },
-          "sortTailwindcss": {
-            "attributes": ["class", "className"],
-            "functions": ["clsx", "cn", "cva", "tv"]
           }
         }'
 
-        # Conditionally add stylesheet if it exists
-        if [ -f "./src/styles/globals.css" ]; then
-          DEFAULT_CONFIG=$(echo "$DEFAULT_CONFIG" | jq '.sortTailwindcss.stylesheet = "./src/styles/globals.css"')
-        fi
-
         CONFIG="$DEFAULT_CONFIG"
+
 
         # Merge user rules if provided (user rules take precedence)
         if [ -n "$RULES" ]; then

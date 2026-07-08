@@ -6,7 +6,7 @@ This GitHub Action provides a reusable Composite Action for fast JavaScript and 
 
 - **Blazing Fast**: Powered by Oxc, the fastest JavaScript toolchain.
 - **Auto-commit**: Automatically detects changes and pushes formatted code back to your branch.
-- **Default Formatting Rules**: Includes sensible defaults for import sorting and Tailwind CSS class sorting.
+- **Default Formatting Rules**: Includes sensible defaults for import sorting.
 - **Zero Repo Noise**: Provide rules and ignore patterns directly in your workflow file - no need for extra files in your repository.
 - **CI Friendly**: Automatically adds `[skip ci]` to prevent recursive workflow runs.
 
@@ -62,10 +62,6 @@ If no `rules` or `ignore` are provided, the following defaults are used:
 
 ### Formatting Rules
 - **Import Sorting**: Groups imports by type, builtins/externals, internal, parents, and siblings.
-- **Tailwind CSS Sorting**:
-  - Attributes: `class`, `className`
-  - Functions: `clsx`, `cn`, `cva`, `tv`
-  - Stylesheet: Automatically detects `./src/styles/globals.css`.
 
 ## Configuration
 
