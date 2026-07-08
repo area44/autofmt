@@ -20,7 +20,7 @@ runs:
         RULES: ${{ inputs.rules }}
         IGNORE: ${{ inputs.ignore }}
       run: |
-        # Default configuration based on torn4dom4n/torn4dom4n.github.io
+        # Default configuration
         DEFAULT_CONFIG='{
           "ignorePatterns": [
             "*.min.*",
