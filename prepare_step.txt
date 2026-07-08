@@ -1,20 +1,3 @@
-name: "autofmt"
-description: "Fast JavaScript/TypeScript formatting using the Oxc formatter"
-author: "AREA44"
-inputs:
-  rules:
-    description: "JSON string of formatting rules"
-    required: false
-  ignore:
-    description: "Multiline string of patterns to ignore"
-    required: false
-runs:
-  using: "composite"
-  steps:
-    - name: Install oxfmt
-      run: npm install -g oxfmt
-      shell: bash
-
     - name: Prepare configuration
       env:
         RULES: ${{ inputs.rules }}
@@ -72,33 +55,4 @@ runs:
 
         echo "$CONFIG" > .oxfmtrc.json
         echo "Created temporary .oxfmtrc.json"
-      shell: bash
-
-    - name: Run oxfmt
-      run: |
-        oxfmt --write .
-      shell: bash
-
-    - name: Check for changes and push
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      run: |
-        rm -f .oxfmtrc.json
-
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-        PUSH_REF="HEAD"
-        if [ -n "$GITHUB_HEAD_REF" ]; then
-          PUSH_REF="HEAD:$GITHUB_HEAD_REF"
-        fi
-
-        git add .
-        if ! git diff --cached --quiet; then
-          echo "Changes detected, committing and pushing to $PUSH_REF..."
-          git commit -m "style: format code with oxfmt [skip ci]"
-          git push origin $PUSH_REF
-        else
-          echo "No changes detected."
-        fi
       shell: bash
